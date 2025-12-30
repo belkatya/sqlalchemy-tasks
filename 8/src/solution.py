@@ -19,5 +19,23 @@ session = session_maker()
 
 
 # BEGIN (write your solution here)
-
+async def get_all_movies(session):
+    query = select(Movie).options(selectinload(Movie.director)).order_by(Movie.title)
+    result = await session.execute(query)
+    movies = result.scalars().all()
+    
+    formatted_movies = []
+    for movie in movies:
+        release_date_str = movie.release_date.strftime('%Y-%m-%d')
+        
+        movie_info = (
+            f"{movie.title} by {movie.director.name}, "
+            f"released on {release_date_str}, "
+            f"duration: {movie.duration} min, "
+            f"genre: {movie.genre}, "
+            f"rating: {movie.rating}"
+        )
+        formatted_movies.append(movie_info)
+    
+    return formatted_movies
 # END

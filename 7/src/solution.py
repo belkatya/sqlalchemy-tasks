@@ -15,5 +15,12 @@ Base.metadata.create_all(engine)
 
 
 # BEGIN (write your solution here)
-
+def delete_director(session, director_id):
+    director = session.query(Director).filter(Director.id == director_id).first()
+    
+    if director:
+        session.delete(director)
+        session.commit()
+    else:
+        session.rollback()
 # END
